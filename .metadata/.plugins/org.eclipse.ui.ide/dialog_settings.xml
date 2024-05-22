@@ -27,6 +27,9 @@
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
 		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\Clase_2\freertos_app_example_2_6"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\Clase_2\freertos_book_Example001"/>
 			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\freertos_app_example_1_6"/>
 			<item value="C:\Users\chris\OneDrive\Documents\2_CESE\6_Sistemas_Operativos_de_Tiempo_Real_I\Practicas\freertos_app_example_1_6"/>
 			<item value="C:\Users\chris\OneDrive\Documents\2_CESE_2023\6_Sistemas_Operativos_de_Tiempo_Real_I\freertos_app_example_1_6\freertos_app_example_1_6"/>

@@ -1,0 +1,10 @@
+18:43:34 **** Incremental Build of configuration Debug for project freertos_book_Example002 ****
+make -j12 all 
+arm-none-eabi-size  freertos_book_Example002.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25108	    132	  19740	  44980	   afb4	freertos_book_Example002.elf
+Finished building: default.size.stdout
+ 
+
+18:43:35 Build Finished. 0 errors, 0 warnings. (took 251ms)
+

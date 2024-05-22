@@ -1,0 +1,24 @@
+17:05:40 **** Incremental Build of configuration Debug for project AdM_assembly_clase4 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F429xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:134:24: warning: variable 'resultado' set but not used [-Wunused-but-set-variable]
+  134 |         uint32_t dato, resultado, inicio, ancho;
+      |                        ^~~~~~~~~
+../Core/Src/main.c:164:18: warning: unused variable 'a' [-Wunused-variable]
+  164 |         uint16_t a = 1; // debug stop
+      |                  ^
+arm-none-eabi-gcc -o "AdM_assembly_clase4.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\AdM_assembly_clase4\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="AdM_assembly_clase4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: AdM_assembly_clase4.elf
+ 
+arm-none-eabi-size  AdM_assembly_clase4.elf 
+arm-none-eabi-objdump -h -S AdM_assembly_clase4.elf  > "AdM_assembly_clase4.list"
+   text	   data	    bss	    dec	    hex	filename
+  12756	     12	   3452	  16220	   3f5c	AdM_assembly_clase4.elf
+Finished building: default.size.stdout
+ 
+Finished building: AdM_assembly_clase4.list
+ 
+
+17:05:41 Build Finished. 0 errors, 2 warnings. (took 1s.79ms)
+
