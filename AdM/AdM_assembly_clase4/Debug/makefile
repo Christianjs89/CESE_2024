@@ -60,8 +60,8 @@ all: main-build
 main-build: AdM_assembly_clase4.elf secondary-outputs
 
 # Tool invocations
-AdM_assembly_clase4.elf AdM_assembly_clase4.map: $(OBJS) $(USER_OBJS) C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE\ 2024\AdM_assembly_clase4\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "AdM_assembly_clase4.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\AdM_assembly_clase4\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="AdM_assembly_clase4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+AdM_assembly_clase4.elf AdM_assembly_clase4.map: $(OBJS) $(USER_OBJS) C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE\ 2024\AdM\AdM_assembly_clase4\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "AdM_assembly_clase4.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\AdM\AdM_assembly_clase4\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="AdM_assembly_clase4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

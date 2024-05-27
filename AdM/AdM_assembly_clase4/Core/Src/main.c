@@ -38,7 +38,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-#define TEST 7 // testear solo funcion correspondiente
+#define TEST 1 // testear solo funcion correspondiente
 
 /* USER CODE END PM */
 
@@ -85,8 +85,8 @@ int main(void)
     if(1==TEST){
 	/* ----------- Función asm_sum ----------- */
 	uint32_t a, b, c;
-	a = 50;
-	b = 20;
+	a = 9;
+	b = 5;
 	c = asm_sum(a, b);
 	/* ----------- Función asm_sum ----------- */
 

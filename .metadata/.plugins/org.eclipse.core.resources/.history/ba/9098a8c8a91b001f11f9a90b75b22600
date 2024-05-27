@@ -1,0 +1,104 @@
+/*
+ * asm_func.S
+ *
+ *  Created on: May 23, 2024
+ *      Author: chris
+ */
+
+.text 	// Sección de texto: se indica que en esta sección hay código para ejecutar
+
+.syntax unified		// Uso del UAL
+.thumb	// El ISA que se utilizará es Thumb-2
+
+// .global labels
+.global pack32to16
+.global max
+
+
+/* -------------- GP2-EJ1 PACK32TO16  -------------- */
+/*
+void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud)
+
+Parametros entrada:
+	R0 vectorIn dir
+	R1 vectorOut dir
+	R2 longitud
+	R3 *libre*
+
+Retorno:
+	void
+*/
+
+.thumb_func
+pack32to16:
+	CBZ R0, exit1 // compare and branch if zero: si pointer de vector es NULL salir
+	CBZ R1, exit1 // idem
+
+	loop1:
+		SUB R2, #1 // decrementar contador, comienza en longitud-1
+		LDR R3, [R0, R2, LSL #2] // cargar elementos de int32 en el R3 -> R3 = *(R0+(R2<<2))
+		ASR R3, R3, #16 // extraer 16 bits mas significativos con un shift de 16 a la derecha
+		STRH R3, [R1, R2, LSL #1] // almacenar el valor del R3 en memoria con int16 -> *(R1+(R2<<2))=*(R1+(R2+2)=R4
+
+		CBZ R2, exit1 // ir a exit si el contador R2=0
+		B loop1 // volver al loop1 si R2 !=0
+
+	exit1:
+		BX LR // branch al link register con dir en caller
+
+/* -------------- GP2-EJ1 PACK32TO16  -------------- */
+
+
+/* -------------- GP2-EJ2 MAX  -------------- */
+/*
+uint32_t max (int32_t * vectorIn, uint32_t longitud)
+
+Parametros de entrada:
+	R0 vectorIn >> dir
+	R1 longitud >> indice
+	R2 *libre* >> almacenar maximo valor al momento
+	R3 *libre* >> almacenar indice del maximo al momento
+	R4 *ocupado, hacer push/pop al stack* >> cargar valores a comparar con R2
+
+Retorno:
+	uint32_t max
+
+*/
+.thumb_func
+max:
+	CBZ R0, exit2
+	PUSH {R4} // utilizar R4 para cargar el valor a comparar
+
+	// Comenzar tomando N-1 como maximo
+	B maxInit
+
+	// recorrer vectorIn comparando cada elemento con el 'mayor' almacenado en R2, y el indice en R3
+	loop2:
+		SUB R1, #1 // decrementar contador, comienza en N-2
+		LDR R4, [R0, R1, LSL #2] // cargar valor a comparar con R2 en R4
+		// If-THEN-ELSE
+		CMP R4, R2// comparar R2 'maximo' con R4
+		// si R4>R2 entonces mover R4 a R2, y R1 (indice) a R3, sino R2 sigue siendo el max
+		ITT GT
+		MOVGT R2, R4 // R2=R4 nuevo max
+		MOVGT R3, R1 // R3=R1 indice actual correspondiente a R4
+		// checkear indice y salir o volver al loop2
+		CBZ R1, exit2 // ir a exit2 si el contador R1=0
+		B loop2 // volver al loop2 si R1 !=0
+
+
+	exit2:
+		MOV R0, R3 // almacenar en R0 (retorno), el indice del maximo que estaba en R3
+		POP {R4}
+		BX LR
+
+
+maxInit:
+	SUB R1, #1 // decrementar contador, comienza en N-1
+	LDR R2, [R0, R1, LSL #2] // cargar en R2, el valor de N-1
+	MOV R3, R1 // cargar en R3 el valor del indice N-1 que esta en R1
+
+
+/* -------------- GP2-EJ2 MAX  -------------- */
+
+

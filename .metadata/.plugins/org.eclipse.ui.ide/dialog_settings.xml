@@ -27,6 +27,15 @@
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
 		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\AdM"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\RTOS_I\Clase_4"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\RTOS_I\Clase_2"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\RTOS_I\Clase_3\freertos_app_example_3_6"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\RTOS_I\Clase_3\freertos_book_Example007"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\RTOS_I\Clase_3\freertos_book_Example006"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\RTOS_I\Clase_3\freertos_book_Example005"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\RTOS_I\Clase_3\freertos_book_Example004"/>
+			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\RTOS_I\Clase_3"/>
 			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\Clase_2\freertos_app_example_2_6"/>
 			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024"/>
 			<item value="C:\Users\chris\STM32CubeIDE\workspace_1.13.2\CESE 2024\Clase_2\freertos_book_Example001"/>

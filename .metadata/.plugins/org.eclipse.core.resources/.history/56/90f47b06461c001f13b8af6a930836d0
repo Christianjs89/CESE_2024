@@ -1,0 +1,206 @@
+/*
+ * asm_func.S
+ *
+ *  Created on: May 23, 2024
+ *      Author: chris
+ */
+
+.text 	// Sección de texto: se indica que en esta sección hay código para ejecutar
+
+.syntax unified		// Uso del UAL
+.thumb	// El ISA que se utilizará es Thumb-2
+
+// .global labels
+.global pack32to16
+.global max
+.global downSample
+
+
+/* -------------- GP2-EJ1 PACK32TO16  -------------- */
+/*
+void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud)
+
+Parametros entrada:
+	R0 vectorIn dir
+	R1 vectorOut dir
+	R2 longitud
+	R3 *libre*
+
+Retorno:
+	void
+*/
+
+.thumb_func
+pack32to16:
+	CBZ R0, exit1 // compare and branch if zero: si pointer de vector es NULL salir
+	CBZ R1, exit1 // idem
+
+	loop1:
+		SUB R2, #1 // decrementar contador, comienza en longitud-1
+		LDR R3, [R0, R2, LSL #2] // cargar elementos de int32 en el R3 -> R3 = *(R0+(R2<<2))
+		ASR R3, R3, #16 // extraer 16 bits mas significativos con un shift de 16 a la derecha
+		STRH R3, [R1, R2, LSL #1] // almacenar el valor del R3 en memoria con int16 -> *(R1+(R2<<2))=*(R1+(R2+2)=R4
+
+		CBZ R2, exit1 // ir a exit si el contador R2=0
+		B loop1 // volver al loop1 si R2 !=0
+
+	exit1:
+		BX LR // branch al link register con dir en caller
+
+/* -------------- GP2-EJ1 PACK32TO16  -------------- */
+
+
+/* -------------- GP2-EJ2 MAX  -------------- */
+/*
+uint32_t max (int32_t * vectorIn, uint32_t longitud)
+
+Parametros de entrada:
+	R0 vectorIn >> dir
+	R1 longitud >> indice
+	R2 *libre* >> almacenar maximo valor al momento
+	R3 *libre* >> almacenar indice del maximo al momento
+	R4 *ocupado, hacer push/pop al stack* >> cargar valores a comparar con R2
+
+Retorno:
+	uint32_t max
+
+*/
+.thumb_func
+max:
+	PUSH {LR}
+	CBZ R0, exit2
+	PUSH {R4} // utilizar R4 para cargar el valor a comparar
+	// Comenzar tomando N-1 como maximo
+	BL maxInit
+
+	// recorrer vectorIn comparando cada elemento con el 'mayor' almacenado en R2, y el indice en R3
+	loop2:
+		SUB R1, #1 // decrementar contador, comienza en N-2
+		LDR R4, [R0, R1, LSL #2] // cargar valor a comparar con R2 en R4
+		// If-THEN-ELSE
+		CMP R4, R2// comparar R2 'maximo' con R4
+		// si R4>R2 entonces mover R4 a R2, y R1 (indice) a R3, sino R2 sigue siendo el max
+		ITT GT
+		MOVGT R2, R4 // R2=R4 nuevo max
+		MOVGT R3, R1 // R3=R1 indice actual correspondiente a R4
+		// checkear indice y salir o volver al loop2
+		CBZ R1, exit2 // ir a exit2 si el contador R1=0
+		B loop2 // volver al loop2 si R1 !=0
+
+	exit2:
+		MOV R0, R3 // almacenar en R0 (retorno), el indice del maximo que estaba en R3
+		POP {R4}
+		POP {LR}
+		BX LR
+
+
+maxInit:
+	PUSH {LR}
+	SUB R1, #1 // decrementar contador, comienza en N-1
+	LDR R2, [R0, R1, LSL #2] // cargar en R2, el valor de N-1
+	MOV R3, R1 // cargar en R3 el valor del indice N-1 que esta en R1
+	POP {LR}
+	BX LR // alternativa: B loop2 sin hacer push/pop
+
+
+/* -------------- GP2-EJ2 MAX  -------------- */
+
+
+
+
+/* -------------- GP2-EJ3 DOWNSAMPLE  -------------- */
+/*
+void downSample (int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N)
+
+Parametros de entrada:
+	R0 vectorIn
+	R1 vectorOut >> vector con menos muestras
+	R2 longitud >> cantidad elementos vectorIn, multiplo de N, usar de indice
+	R3 N >> saltear cada N muestras
+	R4 *ocupado, hacer push/pop* >> usar para almacenar el valor del vector
+	R5 *ocupado, hacer push/pop* >> indice2 usar como indice del vector de salida
+	R6 *ocupado, hacer push/pop* >> contador de omision
+
+Retorno:
+	void
+
+	uint32_t longitud2 = longitud * (N-1) / N;
+	uint32_t indice2 = longitud2-1;
+	uint32_t indice = longitud-1;
+	uint32_t cuenta = N; // contador de omision
+
+    while(1){
+    if( (indice == longitud-1)||(cuenta == 0) ){
+    	cuenta = N; // resetear contador
+	     // no almacenar
+    } else {
+	    vectorOut[indice2] = vectorIn[indice];
+	    indice2--;
+    }
+    if(indice == 0) break;
+    cuenta--;
+    indice--;
+*/
+
+.thumb_func
+downSample:
+	PUSH {R4-R6}
+	CBZ R0, exit3
+	CBZ R1, exit3
+
+	BL longVectorOut
+
+	//MOV R6, R3 // cuenta = N
+	BL resetCount
+
+	// recorrer vectorIn almacenando en vectorOut, excepto si el indice es divisible por N (indice%N == 0 >> no guardar)
+	loop3:
+		SUB R2, #1 // indice-1
+		//LDR R4, [R0, R2, LSL #2] // cargar elemento vectorIn en R4
+		CMP R6, #0 // contador omision = 0 ?
+		//ITE EQ // si R6=0 entonces EQ, sino NE
+		BEQ resetCount // reset contador omision R6=N si fue 0
+		BNE vectorOut // si no fue 0, almacenar en vector de salida
+		//condExit:
+		CBZ R2, exit3 // ir a exit3 si el indice R2=0
+		B loop3 // volver al loop2 si R1 !=0
+
+
+	exit3:
+		POP {R4-R6}
+		BX LR
+
+
+longVectorOut: // R5 longitud2 vectorOut, R3=N, R2 long vectorIn
+	PUSH {LR}
+	// longitud2 = longitud * (N-1) / N
+	SUB R5, R3, #1 // R5=R3-1=N-1
+	MUL R5, R5, R2 // R5 = R5*R2 = long-vectorIn * (N-1)
+	UDIV R5, R5, R3 // R5=R5/R3=long-vectorIn *(N-1)/N
+
+	//SUB R5, #1 // R5=longitud2-1, comenzar indice en longitud2-1
+	POP {LR}
+	BX LR
+
+resetCount:
+	PUSH {LR}
+	MOV R6, R3 // resetear cuenta = N
+	POP {LR}
+	BX LR
+
+vectorOut:
+	PUSH {LR}
+	SUB R5, #1 // indice2-1
+	LDR R4, [R0, R2, LSL #2] // cargar elemento vectorIn en R4=[R0+(R2x4)]
+	STR R4, [R1, R5, LSL #2] // guardar elemento en vectorOut [R1+(R5x4)]=R4
+	POP {LR}
+	BX LR
+
+
+/* -------------- GP2-EJ3 DOWNSAMPLE  -------------- */
+
+
+
+
+
+
