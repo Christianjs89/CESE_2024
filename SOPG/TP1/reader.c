@@ -10,20 +10,18 @@
 const char logFile[] = "log.txt";
 const char signalFile[] = "signal.txt";
 
-void clearBuffer(char buffer[], int len);
-void print_to_file(char inputBuffer[], int len);
-void init_files();
+void clearBuffer(char buffer[], int len); // clear read buffer after one read cycle
+void print_to_file(char inputBuffer[], int len); // write DATA/SIGNAL to log/signal files
+void init_files(); // Add date-timestamp in log and signal files
 
 
 int main(void) {
     const char fifoName[] = "myfifo";
-    const int inputBufferSize = 200, outputBufferSize = 300;
-    char inputBuffer[inputBufferSize], outputBuffer[outputBufferSize];
-    int fd, bytes, count;
+    const int inputBufferSize = 200;
+    char inputBuffer[inputBufferSize];
+    int fd, bytes;
 
     printf("Waiting for writer...\n");
-
-    //mknod(fifoName, __S_IFIFO | 0666, 0);
 
     fd = open(fifoName, O_RDONLY);
     if( -1 == fd){
@@ -36,24 +34,21 @@ int main(void) {
     init_files();
 
     do {
-        
+        clearBuffer(inputBuffer,inputBufferSize);
         bytes = read(fd, inputBuffer, inputBufferSize);
         if (bytes == -1){
             perror("read");
             return 1;
         } else {
+            inputBuffer[bytes] = '\0';
             printf("reader: read %d bytes: %s", bytes, inputBuffer);
             print_to_file(inputBuffer, strlen(inputBuffer));
-        }
+        }    
         
-        clearBuffer(inputBuffer,inputBufferSize);
-  
     } while (bytes > 0);
-
 
     close(fd);
     return 0;
-
 }
 
 
